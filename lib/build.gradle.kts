@@ -17,12 +17,6 @@ java {
 
 dependencies {
     compileOnly("app.cash.paparazzi:paparazzi:2.0.0-alpha02")
-    implementation("com.squareup.okio:okio:3.1.0")
-    implementation("com.google.guava:guava:31.1-jre")
-    implementation("org.jcodec:jcodec-javase:0.2.5")
-    implementation("com.squareup.moshi:moshi-adapters:1.15.2")
-    implementation("com.squareup.moshi:moshi:1.15.2")
-    implementation("com.squareup.moshi:moshi-kotlin:1.15.2")
 
     testImplementation("app.cash.paparazzi:paparazzi:2.0.0-alpha02")
     testImplementation("org.junit.jupiter:junit-jupiter:5.10.2")
@@ -38,7 +32,8 @@ tasks.test {
 val paparazziCompatVersions = mapOf(
     "alpha02" to "2.0.0-alpha02",
     "alpha03" to "2.0.0-alpha03",
-    "alpha04" to "2.0.0-alpha04"
+    "alpha04" to "2.0.0-alpha04",
+    "alpha05" to "2.0.0-alpha05"
 )
 
 paparazziCompatVersions.forEach { (label, version) ->

@@ -1,18 +1,23 @@
+@file:Suppress("DEPRECATION")
+
 package io.github.cdsap.td.paparazzi
 
 import app.cash.paparazzi.SnapshotHandler
 import app.cash.paparazzi.SnapshotVerifier
+import app.cash.paparazzi.detectMaxPercentDifferenceDefault
 import java.io.File
 
 class TDPaparazziHandlerProvider {
+    @JvmOverloads
     fun determineHandler(
-        maxPercentDifference: Double,
+        maxPercentDifference: Double = detectMaxPercentDifferenceDefault(),
+        @Suppress("UNUSED_PARAMETER")
         fileNameProvider: SnapshotFileNameProvider = DefaultSnapshotFileNameProvider
     ): SnapshotHandler =
         if (System.getProperty("paparazzi.test.verify")?.toBoolean() == true) {
             createSnapshotVerifier(maxPercentDifference)
         } else {
-            TDHtmlReportWriter(fileNameProvider = fileNameProvider)
+            TDHtmlReportWriter(maxPercentDifference = maxPercentDifference)
         }
 
     private fun createSnapshotVerifier(maxPercentDifference: Double): SnapshotVerifier {
