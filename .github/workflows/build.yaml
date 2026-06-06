@@ -51,6 +51,8 @@ jobs:
             project-dir: "integration-test/agp8"
           - name: "AGP 9.0 + Paparazzi alpha04"
             project-dir: "integration-test/agp9"
+          - name: "AGP 9.0 + Paparazzi alpha05"
+            project-dir: "integration-test/agp9-alpha05"
 
     runs-on: ubuntu-latest
     name: "integration (${{ matrix.name }})"
