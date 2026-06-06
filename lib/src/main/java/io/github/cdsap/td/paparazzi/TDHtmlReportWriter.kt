@@ -62,11 +62,11 @@ class TDHtmlReportWriter @JvmOverloads constructor(
 
 /**
  * Builds an upstream HtmlReportWriter while tolerating the constructor change
- * between Paparazzi alpha02 and alpha03+. We compile-link against alpha02's
- * `(String, File, File)` signature; on alpha03+ that throws NoSuchMethodError
- * and we fall back to the public `(String, File, double)` overload, temporarily
- * setting `paparazzi.snapshot.dir` so the writer's default snapshot directory
- * resolves to the value the caller asked for.
+ * between Paparazzi alpha02 and alpha03+. We compile-link against alpha05's
+ * `(String, File, double)` signature, temporarily setting
+ * `paparazzi.snapshot.dir` so the writer's default snapshot directory resolves
+ * to the value the caller asked for. On alpha02 that constructor doesn't
+ * exist, so we fall back to its `(String, File, File)` form via reflection.
  */
 private fun createUpstreamHandler(
     runName: String,
@@ -74,16 +74,16 @@ private fun createUpstreamHandler(
     snapshotRootDirectory: File,
     maxPercentDifference: Double
 ): SnapshotHandler = try {
-    HtmlReportWriter(runName, rootDirectory, snapshotRootDirectory)
+    withSnapshotDirProperty(snapshotRootDirectory.absolutePath) {
+        HtmlReportWriter(runName, rootDirectory, maxPercentDifference)
+    }
 } catch (e: NoSuchMethodError) {
     val constructor = HtmlReportWriter::class.java.getDeclaredConstructor(
         String::class.java,
         File::class.java,
-        Double::class.javaPrimitiveType
+        File::class.java
     )
-    withSnapshotDirProperty(snapshotRootDirectory.absolutePath) {
-        constructor.newInstance(runName, rootDirectory, maxPercentDifference) as SnapshotHandler
-    }
+    constructor.newInstance(runName, rootDirectory, snapshotRootDirectory) as SnapshotHandler
 }
 
 private inline fun <T> withSnapshotDirProperty(value: String, block: () -> T): T {
